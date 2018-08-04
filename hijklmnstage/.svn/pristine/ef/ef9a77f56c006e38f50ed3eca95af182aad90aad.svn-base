@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Hijklmn|picture</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css}" />
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css}" />
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<!-- iCheck -->
+<link rel="stylesheet" th:href="@{/plugins/iCheck/square/blue.css}" />
+<style>
+html {
+	height: 120%;
+	width: 100%;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-image: url("/img/ocean.jpg");
+}
+
+ul li {
+	list-style: none;
+}
+
+li:hover {
+	cursor: pointer
+}
+
+#inputtext {
+	background-color: transparent;
+}
+</style>
+</head>
+<body class="skin-blue sidebar-mini">
+	<div
+		style="position: fixed; z-index: 3; width: 100%; height: 50px; top: 0px;">
+		<ul class="nav nav-pills">
+			<center>
+				<div class="input-group" style="width: 80%; margin-top: 10px;">
+					<input style="background-color: transparent;" type="text" name="q"
+						class="form-control" placeholder="Search..." /> <span
+						style="background-color: transparent;" class="input-group-btn">
+						<button type="submit" name="search" id="search-btn"
+							class="btn btn-flat">
+							<i class="fa fa-search"></i>
+						</button>
+					</span>
+				</div>
+			</center>
+		</ul>
+	</div>
+
+	<div style="width: 100%; height:100%; padding-top: 50px; padding-bottom: 30px;">
+		<div class="wrapper">
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" th:each="item : ${items}">
+						<div class="nav-tabs-custom">
+							<div class="tab-content">
+								<div class="active tab-pane" id="activity">
+									<div class="post">
+
+										<div class="user-block">
+											<label th:text="${item.title}"></label><br />
+										</div>
+
+										<div class="row margin-bottom">
+
+											<div class="col-sm-12">
+												<center>
+													<img class="img-responsive"
+														th:src="${mediaserver+item.picUrl+item.picName}"
+														th:alt="${item.title}" th:onclick="'javascript:pictureInfo(\''+${item.picId}+'\');'"/>
+												</center>
+											</div>
+
+										</div>
+
+										<p>
+											<i class="fa fa-user bg-aqua"></i><span>&nbsp;&nbsp;</span><label
+												th:text="${item.author}"> </label>
+										</p>
+
+										<p>
+											<span class="label label-info"
+												th:each="ite : ${#strings.arraySplit(item.tag,',')}"
+												th:text="${ite}"></span>
+										</p>
+
+<!-- 										<p>
+											<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											<span th:text="${item.picDesc}"> </span>
+										</p> -->
+
+										<ul class="list-inline">
+											<li><a class="link-black text-sm"> <i
+													class="fa fa-thumbs-o-up margin-r-5"></i>Like <span
+													th:text="${item.favourNumber}"></span></a></li>
+											<li class="pull-right"><a class="link-black text-sm">
+													<i class="fa fa-comments-o margin-r-5"></i> Comments
+											</a></li>
+										</ul>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<div
+		style="position: fixed; bottom: 0px; width: 100%; height: 60px; line-height: 60px;">
+		<ul>
+			<li><a onclick="picture();"><strong>home</strong></a></li>
+			<form id="homeForm" action="/"></form>
+		</ul>
+	</div>
+
+	<!-- jQuery 2.2.3 -->
+	<script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- iCheck -->
+	<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+
+	<script>
+		//打开模态框
+		var openOperateResultWindow = function() {
+			$("#operateResult").modal("show");
+		}
+
+		//通知消息窗口
+		var openJSNoticeWindow = function(content) {
+			$("#notice_content").text(content);
+			$("#jsNoticeWindow").modal("show");
+		}
+
+		//判断为空的方法
+		var empty = function(val) {
+			if (val == null || val == '') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		// 跳转图片浏览
+		var picture = function() {
+			document.getElementById("homeForm").submit();
+		}
+		
+		var pictureInfo = function(picId){
+			console.info("/picture/info/"+picId);
+			window.location.href = "/picture/info/"+picId;
+		} 
+		
+	</script>
+</body>
+</html>

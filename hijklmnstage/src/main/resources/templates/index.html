@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Hijklmn</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+<style>
+html{
+	width:100%;
+	height:100%;
+}
+body {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-image: url("/img/ocean.jpg");
+}
+
+ul{
+	padding:0px;
+	margin:0px;
+}
+
+li{
+	list-style:none;
+	float:left;
+	margin-left:16px;
+}
+
+li:hover{
+	cursor:pointer
+}
+
+</style>
+</head>
+<body>
+
+<ul>
+	<li><span onclick="picture();"><font size="4">picture</font></span></li>
+	<li><span onclick="music();"><font size="4">music</font></span></li>
+	<li><span onclick="video();"><font size="4">video</font></span></li>
+</ul>
+
+<!-- jQuery 2.2.3 -->
+<script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+
+<script>
+	//打开模态框
+	var openOperateResultWindow = function() {
+		$("#operateResult").modal("show");
+	}
+
+	//通知消息窗口
+	var openJSNoticeWindow = function(content) {
+		$("#notice_content").text(content);
+		$("#jsNoticeWindow").modal("show");
+	}
+
+	//判断为空的方法
+	var empty = function(val) {
+		if (val == null || val == '') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// 跳转图片浏览
+	var picture = function() {
+		window.location.href = "/picture/view";
+	}
+	
+	// 跳转视频浏览
+	var video = function(){
+		window.location.href = "/video/view";
+	}
+	
+</script>
+</body>
+</html>

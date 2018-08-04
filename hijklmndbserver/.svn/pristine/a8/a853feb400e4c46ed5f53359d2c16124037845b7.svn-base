@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.guosong.sc.hijklmndbserver.mapper.PictureMapper">
+	<resultMap id="BaseResultMap" type="edu.guosong.sc.hijklmncommon.po.Picture">
+	    <id column="pic_id" jdbcType="VARCHAR" property="picId" />
+	    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+	    <result column="pic_name" jdbcType="VARCHAR" property="picName" />
+	    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
+	    <result column="title" jdbcType="VARCHAR" property="title" />
+	    <result column="source" jdbcType="VARCHAR" property="source" />
+	    <result column="author" jdbcType="VARCHAR" property="author" />
+	    <result column="tag" jdbcType="VARCHAR" property="tag" />
+	    <result column="pic_desc" jdbcType="VARCHAR" property="picDesc" />
+	    <result column="favour_number" jdbcType="INTEGER" property="favourNumber" />
+	    <result column="online_datetime" jdbcType="TIMESTAMP" property="onlineDatetime" />
+	    <result column="browse_times" jdbcType="INTEGER" property="browseTimes" />
+	    <result column="isvalid" jdbcType="INTEGER" property="isvalid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		pic_id, category_id, pic_url,pic_name, title, source, author, tag,
+		pic_desc,
+		favour_number,
+		online_datetime, browse_times, isvalid
+	</sql>
+
+	<sql id="query_picture_where">
+		<where>
+			<if test="picId != null">
+				pic_id = #{picId}
+			</if>
+			<if test="categoryId != null">
+				AND category_id = #{categoryId}
+			</if>
+			<if test="picUrl != null">
+				AND pic_url = #{picUrl}
+			</if>
+			<if test="picName != null">
+				AND pic_name = #{picName}
+			</if>
+			<if test="title != null">
+				AND title = #{title}
+			</if>
+			<if test="source != null">
+				AND source = #{source}
+			</if>
+			<if test="author != null">
+				AND author = #{author}
+			</if>
+			<if test="tag != null">
+				AND tag = #{tag}
+			</if>
+			<if test="picDesc != null">
+				AND pic_desc = #{picDesc}
+			</if>
+			<if test="favourNumber != null">
+				AND favour_number = #{favourNumber}
+			</if>
+			<if test="onlineDatetime != null">
+				AND online_datetime = #{onlineDatetime}
+			</if>
+			<if test="browseTimes != null">
+				AND browse_times = #{browseTimes}
+			</if>
+			<if test="isvalid != null">
+				AND isvalid = #{isvalid}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="query_picture_desc">
+		<if test="sequence == 1 and sortField != null">
+			order by #{sortField} desc
+		</if>
+		<if test="sequence == 0 and sortField != null">
+			order by #{sortField} asc
+		</if>
+	</sql>
+
+	<sql id="query_picture_page">
+		<if test="index != null and size != null">
+			limit #{index} , #{size}
+		</if>
+		<if test="index != null and size == null">
+			limit #{index}
+		</if>
+	</sql>
+
+	<select id="queryList" parameterType="edu.guosong.sc.hijklmncommon.dto.PictureDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from picture
+		<include refid="query_picture_where" />
+		<include refid="query_picture_desc" />
+		<include refid="query_picture_page" />
+	</select>
+
+	<select id="query" parameterType="edu.guosong.sc.hijklmncommon.dto.PictureDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from picture
+		limit 1;
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from picture
+		where pic_id = #{picId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		picture
+		where pic_id = #{picId,jdbcType=VARCHAR}
+	</delete>
+  <insert id="insert" parameterType="edu.guosong.sc.hijklmncommon.po.Picture">
+    insert into picture (pic_id, category_id, pic_name, 
+      pic_url, title, source, 
+      author, tag, pic_desc, 
+      favour_number, online_datetime, browse_times, 
+      isvalid)
+    values (#{picId,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER}, #{picName,jdbcType=VARCHAR}, 
+      #{picUrl,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{picDesc,jdbcType=VARCHAR}, 
+      #{favourNumber,jdbcType=INTEGER}, #{onlineDatetime,jdbcType=TIMESTAMP}, #{browseTimes,jdbcType=INTEGER}, 
+      #{isvalid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.guosong.sc.hijklmncommon.po.Picture">
+    insert into picture
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="picId != null">
+        pic_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="picName != null">
+        pic_name,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="picDesc != null">
+        pic_desc,
+      </if>
+      <if test="favourNumber != null">
+        favour_number,
+      </if>
+      <if test="onlineDatetime != null">
+        online_datetime,
+      </if>
+      <if test="browseTimes != null">
+        browse_times,
+      </if>
+      <if test="isvalid != null">
+        isvalid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="picId != null">
+        #{picId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="picName != null">
+        #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="picDesc != null">
+        #{picDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="favourNumber != null">
+        #{favourNumber,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDatetime != null">
+        #{onlineDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="browseTimes != null">
+        #{browseTimes,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null">
+        #{isvalid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.guosong.sc.hijklmncommon.po.Picture">
+    update picture
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="picName != null">
+        pic_name = #{picName,jdbcType=VARCHAR},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="picDesc != null">
+        pic_desc = #{picDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="favourNumber != null">
+        favour_number = #{favourNumber,jdbcType=INTEGER},
+      </if>
+      <if test="onlineDatetime != null">
+        online_datetime = #{onlineDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="browseTimes != null">
+        browse_times = #{browseTimes,jdbcType=INTEGER},
+      </if>
+      <if test="isvalid != null">
+        isvalid = #{isvalid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where pic_id = #{picId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.guosong.sc.hijklmncommon.po.Picture">
+    update picture
+    set category_id = #{categoryId,jdbcType=INTEGER},
+      pic_name = #{picName,jdbcType=VARCHAR},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      pic_desc = #{picDesc,jdbcType=VARCHAR},
+      favour_number = #{favourNumber,jdbcType=INTEGER},
+      online_datetime = #{onlineDatetime,jdbcType=TIMESTAMP},
+      browse_times = #{browseTimes,jdbcType=INTEGER},
+      isvalid = #{isvalid,jdbcType=INTEGER}
+    where pic_id = #{picId,jdbcType=VARCHAR}
+  </update>
+</mapper>

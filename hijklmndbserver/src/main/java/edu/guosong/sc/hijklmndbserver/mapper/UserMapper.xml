@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.guosong.sc.hijklmndbserver.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="edu.guosong.sc.hijklmncommon.po.User">
+		<id column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="create_datetime" jdbcType="TIMESTAMP" property="createDatetime" />
+		<result column="isvalid" jdbcType="INTEGER" property="isvalid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id, username, password, create_datetime, isvalid
+	</sql>
+
+	<sql id="query_user_where">
+		<where>
+			<if test="userId != null">
+				 user_id = #{userId}
+			</if>
+			<if test="username != null">
+				AND username = #{username}
+			</if>
+			<if test="password != null">
+				AND `password` = #{password}
+			</if>
+			<if test="createDatetime != null">
+				AND create_datetime = #{createDatetime}
+			</if>
+			<if test="isvalid != null">
+				AND isvalid = #{isvalid}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="query_user_desc">
+		<if test="sequence == 1 and sortField != null">
+			order by #{sortField} desc
+		</if>
+		<if test="sequence == 0 and sortField != null">
+			order by #{sortField} asc
+		</if>
+	</sql>
+
+	<sql id="query_user_page">
+		<if test="index != null and size != null">
+			limit #{index} , #{size}
+		</if>
+		<if test="index != null and size == null">
+			limit #{index}
+		</if>
+	</sql>
+
+	<select id="queryList" parameterType="edu.guosong.sc.hijklmncommon.dto.UserDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		<include refid="query_user_where" />
+		<include refid="query_user_desc" />
+		<include refid="query_user_page" />
+	</select>
+
+	<select id="query" parameterType="edu.guosong.sc.hijklmncommon.dto.UserDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		<include refid="query_user_where" />
+		limit 1;
+	</select>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from user
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="edu.guosong.sc.hijklmncommon.po.User">
+		insert into user (user_id,
+		username, password,
+		create_datetime, isvalid)
+		values
+		(#{userId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{createDatetime,jdbcType=TIMESTAMP},
+		#{isvalid,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="edu.guosong.sc.hijklmncommon.po.User">
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="username != null">
+				username,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="createDatetime != null">
+				create_datetime,
+			</if>
+			<if test="isvalid != null">
+				isvalid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="createDatetime != null">
+				#{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isvalid != null">
+				#{isvalid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="edu.guosong.sc.hijklmncommon.po.User">
+		update user
+		<set>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="createDatetime != null">
+				create_datetime = #{createDatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="isvalid != null">
+				isvalid = #{isvalid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="edu.guosong.sc.hijklmncommon.po.User">
+		update user
+		set
+		username = #{username,jdbcType=VARCHAR},
+		password =
+		#{password,jdbcType=VARCHAR},
+		create_datetime =
+		#{createDatetime,jdbcType=TIMESTAMP},
+		isvalid =
+		#{isvalid,jdbcType=INTEGER}
+		where user_id = #{userId,jdbcType=VARCHAR}
+	</update>
+</mapper>

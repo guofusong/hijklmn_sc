@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>hijklmn | admin | addpicture</title>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+<link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/bootstrap-daterangepicker/daterangepicker.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/iCheck/all.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/timepicker/bootstrap-timepicker.min.css}" />
+<link rel="stylesheet" th:href="@{/bower_components/select2/dist/css/select2.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/skins/_all-skins.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/photoswipe/dist/photoswipe.css}" /> 
+<link rel="stylesheet" th:href="@{/plugins/photoswipe/dist/default-skin/default-skin.css}" /> 
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<!-- 图片控件开始 -->
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- 图片控件结束 -->
+
+
+	<!-- 通知弹出框 -->
+	<div id="jsNoticeWindow" class="modal fade bs-example-modal-sm"
+		tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 footer-item">
+									<label id="notice_content"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 通知弹出框 -->
+	<div id="operateResultWindow" th:if="${result != null}"
+		class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+		aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 footer-item">
+									<label th:text="${result}"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="wrapper">
+		<header class="main-header">
+			<a th:href="@{/home}" class="logo"> <span class="logo-mini"><b>A</b>dmin</span>
+				<span class="logo-lg"><b>Admin</b></span>
+			</a>
+			<nav class="navbar navbar-static-top">
+				<a class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu"><a
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								th:src="@{/dist/img/user2-160x160.jpg}" class="user-image"
+								alt="User Image" /> <span class="hidden-xs"
+								th:text="${session.user.username}"></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li class="user-header">
+									<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle" alt="User Image" />
+									<p th:text="${session.user.username}"></p>
+								</li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a th:href="@{/user/logout}" class="btn btn-default btn-flat">Log out</a>
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+							alt="User Image" />
+					</div>
+					<div class="pull-left info">
+						<p>
+							<span th:text="${session.user.username}"></span>
+						</p>
+						<a><i class="fa fa-circle text-success"></i> Online</a>
+					</div>
+				</div>
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">MAIN NAVIGATION</li>
+					<li th:each="menuItem : ${session.menu}"><a
+						th:href="${menuItem.requestUrl}"><i
+							class="fa fa-circle-o text-aqua"></i><span
+							th:text="${menuItem.name}"></span></a></li>
+				</ul>
+			</section>
+		</aside>
+		<div class="content-wrapper">
+			<section class="content-header">
+				<h1>
+					Admin <small>添加图片</small>
+				</h1>
+			</section>
+			<!-- 控制台 -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+
+						<!-- 内容开始 -->
+
+						<div class="box box-default">
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<form id="addForm" action="/addPicture" method="post" enctype="multipart/form-data">
+
+											<div class="form-group">
+												<label>选择类别 </label>
+								              	<select id="category" th:onchange="'javascript:changeCategoryDesc();'" class="form-control select2">
+								                  <option th:each="pictureCategory : ${pictureCategory}" th:text="${pictureCategory.categoryName}" th:value="${pictureCategory.categoryId}"></option>
+								              	</select>
+								              	<br/>
+								              	<p><label>类别描述</label></p>
+								              	<p th:each="pictureCategory : ${pictureCategory}" th:id="${'category'+pictureCategory.categoryId}" th:text="${pictureCategory.categoryDesc}" class="category_desc" style="display:none;"></p>
+								              	<hr/>
+								            </div>
+
+											<div class="form-group">
+												<label>图片 <font color="red">*</font></label>
+												<div class="my-gallery" data-pswp-uid="1">
+												    <figure>
+												        <a id="imgView" data-size="1200x800">
+												            <img id="img" style="visibility: hidden; width: 180px; height: 100px;" alt="图片" class="margin" />
+												        </a>
+												    </figure>
+												</div>
+												
+											    <input id="selectedImageInput" name="image" type="file" style="visibility: hidden;" th:onchange="'javascript:preivew(this,\'img\');'" />
+												<input class="btn bg-purple btn-flat margin" type="button" value="选择图片" th:onclick="'javascript:openImageSelectedWindow();'" /> 
+												<input id="goodsItemImgInputBtn" class="btn btn-default btn-flat margin" type="button" value="清空图片" th:onclick="'javascript:clearImg(\'selectedImageInput\',\'img\');'" />
+												<hr/>											
+											</div>
+											<div class="form-group">
+												<label>图片标题 <font color="red">*</font></label> 
+												<input name="title" id="title" type="text" class="form-control" maxlength="20" />
+											</div>
+
+											<div class="form-group">
+												<label>图片来源 <font color="red">*</font></label> 
+												<input name="source" id="source" type="text" class="form-control" maxlength="20" />
+											</div>
+
+											<div class="form-group">
+												<label>图片作者 <font color="red">*</font></label> 
+												<input name="author" id="author" type="text" class="form-control" maxlength="20" />
+											</div>
+
+											<div class="form-group">
+												<label>图片标签 <font color="red">*</font></label> 
+												<input name="tag" id="tag" type="text" class="form-control" maxlength="20" />
+											</div>
+
+											<div class="form-group">
+												<label>图片介绍 <font color="red">*</font></label> 
+												<input name="desc" id="desc" type="text" class="form-control" maxlength="1024" />
+											</div>
+										</form>
+
+										<div class="form-group">
+											<button th:onclick="'javascript:addImage();'" class="btn bg-maroon btn-flat margin">添加图片</button>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+
+						<!-- 内容结束 -->
+					</div>
+				</div>
+			</section>
+
+		</div>
+
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 1.0.0
+			</div>
+			<strong>
+				<a th:href="@{http://www.hijklmn.space}">hijklmn admin</a>
+			</strong>
+		</footer>
+
+	</div>
+
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script th:src="@{/bower_components/select2/dist/js/select2.full.min.js}"></script>
+	<script th:src="@{/bower_components/moment/min/moment.min.js}"></script>
+	<script th:src="@{/bower_components/bootstrap-daterangepicker/daterangepicker.js}"></script>
+	<script th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+	<script th:src="@{/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js}"></script>
+	<script th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+	<script th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+	<script th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.date.extensions.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.extensions.js}"></script>
+	<script th:src="@{/plugins/timepicker/bootstrap-timepicker.min.js}"></script>
+	<script th:src="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+	<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script th:src="@{/dist/js/demo.js}"></script>
+	<script th:src="@{/plugins/photoswipe/dist/photoswipe.min.js}"></script>
+	<script th:src="@{/plugins/photoswipe/dist/photoswipe-ui-default.min.js}"></script>	
+	<script th:src="@{/js/imageview.js}"></script>
+	<script type="text/javascript">
+	
+	//页面初始化时加载	
+	$(function() {
+		openwindow("operateResultWindow");
+		changeCategoryDesc();
+	});
+	
+	// 更改图片描述
+	var changeCategoryDesc = function(){
+		var val = $("#category").val();
+		$(".category_desc").hide();
+		$("#category"+val).show();
+	}
+
+	// 打开模态框的通用方法
+	var openwindow = function(windowObj) {
+		$("#" + windowObj).modal("show");
+	}
+
+	//关闭模态框的通用方法
+	var closewindow = function(windowObj) {
+		$("#" + windowObj).modal("hide");
+	}
+
+	//通知消息窗口
+	var openJSNoticeWindow = function(content) {
+		$("#notice_content").text(content);
+		$("#jsNoticeWindow").modal("show");
+	}
+	
+	// 打开图片选择框
+	var openImageSelectedWindow = function(){
+		$("#selectedImageInput").click();
+	}
+
+	
+	
+	var emptyVal = function(eleid){
+		var v = $("#"+eleid).val();
+		return empty(v);
+	}
+	
+	var empty = function(data){
+		if(data == null || data == '' || data == 'undefined'){
+			return true;
+		}
+		return false;
+	}
+	
+	// 检查参数
+	var checkParam = function() {
+		var imtDom = document.getElementById("selectedImageInput");
+		if (imtDom.value == '' || imtDom.value == null) {
+			openJSNoticeWindow("请选择上传的图片。");
+			return false;
+		}
+		
+		if(emptyVal('category')){
+			openJSNoticeWindow("请先添加图片类别。");
+			return false;
+		}
+
+		if (emptyVal('title')) {
+			openJSNoticeWindow("请输入图片标题。");
+			return false;
+		}
+
+		if (emptyVal('source')) {
+			openJSNoticeWindow("请输入图片来源。");
+			return false;
+		}
+
+		if (emptyVal('author')) {
+			openJSNoticeWindow("请输入图片作者。");
+			return false;
+		}
+		
+		if (emptyVal('tag')) {
+			openJSNoticeWindow("请输入图片标签。");
+			return false;
+		}
+		
+		if (emptyVal('desc')) {
+			openJSNoticeWindow("请输入图片描述。");
+			return false;
+		}
+
+		return true;
+	}
+	
+	var addImage = function(){
+		if(checkParam()){
+			$("#addForm").submit();
+		}
+	}
+	
+	//略缩图开始
+	var allowExt = [ 'jpg', 'gif', 'bmp', 'png', 'jpeg' ];
+	var imgname;
+	var imgs;
+	var preivew = function(file, container) {
+		imgname = file.value;
+		imgs = imgname.split(".");
+		if (imgs.length == 0) {
+			openJSNoticeWindow("所选文件不是图片格式文件！");
+			var file = $("#file")
+			file.after(file.clone().val(""));
+			file.remove();
+			document.getElementById(container).alt = "未选择图片";
+			document.getElementById(container).src = "";
+			return;
+		}
+		imgname = imgs[imgs.length - 1];
+		if (!(imgname == "png" || imgname == "jpg" || imgname == "jpeg"
+				|| imgname == "bmp" || imgname == "gif")) {
+			openJSNoticeWindow("所选文件不是图片格式文件！");
+			var file = $("#selectedImageInput")
+			file.after(file.clone().val(""));
+			file.remove();
+			document.getElementById(container).alt = "未选择图片";
+			document.getElementById(container).src = "";
+			return;
+		}
+		try {
+			var pic = new Picture(file, document.getElementById(container));
+		} catch (e) {
+			openJSNoticeWindow(e);
+		}
+	}
+	
+	//缩略图类定义 
+	var Picture = function(file, container) {
+		var height = 0, widht = 0, ext = '', size = 0, name = '', path = '';
+		var self = this;
+		if (file) {
+			path = getImgUrl(file.id);
+			name = file.value;
+			if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+				file.select();
+				path = document.selection.createRange().text;
+			} else if (window.navigator.userAgent.indexOf("Firefox") >= 1) {
+				if (file.files) {
+					path = file.files.item(0).getAsDataURL();
+				} else {
+					path = file.value;
+				}
+			}
+		} else {
+			throw '无效的文件';
+		}
+		ext = name.substr(name.lastIndexOf("."), name.length);
+		if (container.tagName.toLowerCase() != 'img') {
+			throw '不是一个有效的图片容器';
+			container.visibility = 'hidden';
+		}
+		container.src = path;
+		container.alt = name;
+		container.style.visibility = 'visible';
+		size = container.fileSize;
+		this.get = function(name) {
+			return self[name];
+		}
+		this.isValid = function() {
+			if (allowExt.indexOf(self.ext) !== -1) {
+				throw '不允许上传该文件类型';
+				return false;
+			}
+		}
+		$("#imgView").attr("href",path);
+	}
+
+	// 获取图片路径
+	var getImgUrl = function(sourceId) {
+		var url;
+		if (navigator.userAgent.indexOf("MSIE") >= 1) { // IE 
+			url = document.getElementById(sourceId).value;
+		} else if (navigator.userAgent.indexOf("Firefox") > 0) { // Firefox 
+			url = window.URL.createObjectURL(document
+					.getElementById(sourceId).files.item(0));
+		} else if (navigator.userAgent.indexOf("Chrome") > 0) { // Chrome 
+			url = window.URL.createObjectURL(document
+					.getElementById(sourceId).files.item(0));
+		}
+		return url;
+	}
+
+	//略缩图结束
+
+	var clearImg = function(imgInput, imgTag) {
+		var imtDom = document.getElementById(imgInput);
+		if (imtDom.value == '' || imtDom.value == null) {
+			return;
+		}
+		var file = $("#" + imgInput);
+		file.after(file.clone().val(""));
+		file.remove();
+		document.getElementById(imgTag).alt = "";
+		document.getElementById(imgTag).src = "";
+		$("#imgView").removeAttr("href");
+	}
+
+	</script>
+
+
+</body>
+</html>

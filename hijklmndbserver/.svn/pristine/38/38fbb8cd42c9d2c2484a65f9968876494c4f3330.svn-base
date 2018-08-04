@@ -1,0 +1,5 @@
+server.port=8080
+spring.application.name = hijklmndbserver
+eureka.instance.perfer-ip-address=true
+eureka.client.serviceUrl.defaultZone = http://192.168.1.200:1111/eureka/
+#http://guofusong:1112/eureka/

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>advancegoods</title>
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-daterangepicker/daterangepicker.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/iCheck/all.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/plugins/timepicker/bootstrap-timepicker.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/select2/dist/css/select2.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/skins/_all-skins.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}" />
+<link rel="stylesheet"
+	th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic}" />
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header class="main-header">
+			<a th:href="@{/home}" class="logo"> <span class="logo-mini"><b>A</b>dmin</span>
+				<span class="logo-lg"><b>Admin</b></span>
+			</a>
+			<nav class="navbar navbar-static-top">
+				<a class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu"><a
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								th:src="@{/dist/img/user2-160x160.jpg}" class="user-image"
+								alt="User Image" /> <span class="hidden-xs"
+								th:text="${session.user.username}"></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li class="user-header"><img
+									th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+									alt="User Image" />
+									<p th:text="${session.user.username}"></p>
+									<p>
+										<small><span>最近登录时间：</span><span
+											th:text="${#dates.format(session.user.lastLoginDatetime,'yyyy-MM-dd HH:mm:ss')}"></span></small>
+									</p></li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a th:href="@{/logout}" class="btn btn-default btn-flat">Log
+											out</a>
+									</div>
+								</li>
+							</ul></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+							alt="User Image" />
+					</div>
+					<div class="pull-left info">
+						<p>
+							<span th:text="${session.user.username}"></span>
+						</p>
+						<a><i class="fa fa-circle text-success"></i> Online</a>
+					</div>
+				</div>
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">MAIN NAVIGATION</li>
+					<tr th:each="prod : ${prods}">
+						<td th:text="${prod.name}">Onions</td>
+						<td th:text="${prod.price}">2.41</td>
+						<td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+					</tr>
+					<li th:each="optionCard : ${session.optionCards}"><a
+						th:href="${optionCard.requestUrl}"><i
+							class="fa fa-circle-o text-aqua"></i><span
+							th:text="${optionCard.optionName}"></span></a></li>
+				</ul>
+			</section>
+		</aside>
+		<div class="content-wrapper">
+			<section class="content-header">
+				<h1>
+					Admin <small>商品发布-推荐商品</small>
+				</h1>
+			</section>
+			<!-- 控制台 -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+
+						<!-- 内容开始 -->
+
+						<div class="box box-default">
+							<div class="box-header with-border">
+								<h1 class="box-title">
+									<small>置顶商品信息</small>
+								</h1>
+							</div>
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<form id="advanceForm" action="/goods/advancedGoodsItem"
+											enctype="multipart/form-data" method="post">
+											<input type="hidden" name="itemId"
+												th:value="${goodsItem.goodsId}" />
+											<div class="form-group">
+												<label>商品标题&nbsp;-&nbsp;</label><span
+													th:text="${goodsItem.goodsName}"></span>
+											</div>
+
+											<div class="form-group">
+												<label>商品图片 </label>
+												<div class="timeline-body">
+													<img th:src="${imageUrl+goodsItem.goodsImage}"
+														style="width: 210px; height: 120px;" alt="商品图片"
+														class="margin" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label>原置顶图片</label>
+												<div class="timeline-body">
+													<img th:if="${goodsItem.topGoodsImage != null}"
+														th:src="${imageUrl+goodsItem.topGoodsImage}"
+														style="width: 210px; height: 120px;" alt="商品置顶图片"
+														class="margin" />
+												</div>
+												<label>新置顶图片</label>
+												<div class="timeline-body">
+													<img id="topimg"
+														style="visibility: hidden; width: 210px; height: 120px;"
+														alt="商品图片" class="margin" />
+												</div>
+											</div>
+											<div class="form-group">
+												<input id="topimginput" name="topGoodsItemImage" type="file"
+													th:onchange="'javascript:preivew(this,\'topimginput\',\'topimg\',\'isChangeTop\');'" />
+											</div>
+											<div class="form-group">
+												<input id="cleartopimgbtn" class="btn bg-purple margin"
+													type="button" value="清空图片"
+													th:onclick="'javascript:clearImg(\'topimginput\',\'topimg\',\'isChangeTop\');'" />
+
+												<input type="hidden" id="istopinput" name="isTop"
+													th:value="${goodsItem.isTop}" /> <input type="hidden"
+													name="isChangeTop" id="isChangeTop" value="0" /> <input
+													type="hidden" id="topTag" name="topTag"
+													th:value="${goodsItem.isTop}" /> <input type="hidden"
+													id="oldTopImageName" name="oldTopImageName"
+													th:value="${goodsItem.topGoodsImage}" /> <input
+													class="btn btn-primary margin" type="button"
+													th:if="${goodsItem.isTop==1}" value="取消置顶"
+													th:onclick="'javascript:topimage(this,\'istopinput\',\'topimginput\',\'topTag\',\'isChangeTop\');'" />
+												<input class="btn btn-primary margin" type="button"
+													th:if="${goodsItem.isTop==0}" value="置顶"
+													th:onclick="'javascript:topimage(this,\'istopinput\',\'topimginput\',\'topTag\',\'isChangeTop\');'" />
+											</div>
+
+
+											<div class="form-group">
+												<label>原推荐图片</label>
+												<div class="timeline-body">
+													<img th:if="${goodsItem.recommendGoodsImage != null}"
+														th:src="${imageUrl+goodsItem.recommendGoodsImage}"
+														style="width: 210px; height: 120px;" alt="商品推荐图片"
+														class="margin" />
+												</div>
+												<label>新推荐图片</label>
+												<div class="timeline-body">
+													<img id="recommendimg"
+														style="visibility: hidden; width: 210px; height: 120px;"
+														alt="商品图片" class="margin" />
+												</div>
+											</div>
+											<div class="form-group">
+												<input id="recommendimginput" name="recommendGoodsItemImage"
+													type="file"
+													th:onchange="'javascript:preivew(this,\'recommendimginput\',\'recommendimg\',\'isChangeRecommend\');'" />
+											</div>
+											<div class="form-group">
+												<input id="clearrecommendimgbtn"
+													class="btn bg-purple margin" type="button" value="清空图片"
+													th:onclick="'javascript:clearImg(\'recommendimginput\',\'recommendimg\',\'isChangeRecommend\');'" />
+
+												<input type="hidden" id="isrecommendinput"
+													name="isRecommend" th:value="${goodsItem.isRecommend}" />
+												<input type="hidden" name="isChangeRecommend"
+													id="isChangeRecommend" value="0" /> <input type="hidden"
+													id="recommendTag" name="recommendTag"
+													th:value="${goodsItem.isRecommend}" /> <input
+													type="hidden" id="oldRecommendImageName"
+													name="oldRecommendImageName"
+													th:value="${goodsItem.recommendGoodsImage}" /> <input
+													class="btn btn-primary margin" type="button"
+													th:if="${goodsItem.isRecommend==1}" value="取消推荐"
+													th:onclick="'javascript:recommendimage(this,\'isrecommendinput\',\'recommendimginput\',\'recommendTag\');'" />
+												<input class="btn btn-primary margin" type="button"
+													th:if="${goodsItem.isRecommend==0}" value="推荐"
+													th:onclick="'javascript:recommendimage(this,\'isrecommendinput\',\'recommendimginput\',\'recommendTag\');'" />
+											</div>
+
+										</form>
+
+										<div class="form-group">
+											<button id="advancebtn"
+												th:onclick="'javascript:advanceConfrimGoodsItem();'"
+												class="btn bg-maroon btn-flat margin">确定推荐</button>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+							<div class="box-footer">
+								<small>推荐商品信息</small>
+							</div>
+						</div>
+
+						<!-- 内容结束 -->
+					</div>
+				</div>
+			</section>
+
+		</div>
+
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 2.4.0
+			</div>
+			<strong>Copyright &copy; 2014-2016 <a
+				th:href="@{https://adminlte.io}">Almsaeed Studio</a>.
+			</strong> All rights reserved.
+		</footer>
+	</div>
+
+	<!-- 确认窗口 -->
+	<div id="confirmDialog" class="box box-solid bg-light-blue-gradient"
+		style="width: 360px;">
+		<div class="box-header">
+			<i class="fa fa-file-o"></i>
+			<div class="box-tools pull-right">
+				<button class="btn btn-primary btn-sm"
+					th:onclick="'javascript:deleteDialogWindow(\'confirmDialog\');'">
+					<i class="fa fa-times"></i>
+				</button>
+			</div>
+		</div>
+		<div class="box-body border-radius-none">
+			<div class="chart" id="line-chart" style="height: 110px;">
+				<div class="form-group">
+					<label>确认推荐该商品？</label>
+				</div>
+				<div class="form-group box-tools pull-right">
+					<button class="btn btn-default btn-flat margin"
+						th:onclick="'javascript:deleteDialogWindow(\'confirmDialog\');'">取
+						消</button>
+					<button class="btn bg-maroon btn-flat margin"
+						th:onclick="'javascript:advanceConfrimGoodsItem();'">确 定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 消息窗口 -->
+	<div id="msgDialog" class="box box-solid bg-light-blue-gradient"
+		style="width: 360px;" th:if="${operateResult != null}">
+		<div class="box-header">
+			<i class="fa fa-comments"></i><label>你有一条通知信息</label>
+			<div class="box-tools pull-right">
+				<button class="btn btn-primary btn-sm"
+					th:onclick="'javascript:deleteDialogWindow(\'msgDialog\');'">
+					<i class="fa fa-times"></i>
+				</button>
+			</div>
+		</div>
+		<div class="box-body border-radius-none">
+			<div class="chart" id="line-chart" style="height: 120px;">
+				<div class="form-group">
+					<p>
+						<label th:text="${operateResult}"></label>
+					</p>
+				</div>
+				<div class="form-group box-tools pull-right">
+					<button class="btn bg-maroon btn-flat margin"
+						th:onclick="'javascript:deleteDialogWindow(\'msgDialog\');'">
+						确 定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+#msgDialog {
+	position: absolute;
+	z-index: 993;
+	top: 50%;
+	left: 50%;
+	margin-top: -92px;
+	margin-left: -180px;
+}
+
+#confirmDialog {
+	position: absolute;
+	z-index: 999;
+	top: 50%;
+	left: 50%;
+	margin-top: -85px;
+	margin-left: -180px;
+	display: none;
+}
+</style>
+
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script
+		th:src="@{/bower_components/select2/dist/js/select2.full.min.js}"></script>
+	<script th:src="@{/bower_components/moment/min/moment.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-daterangepicker/daterangepicker.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js}"></script>
+	<script
+		th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+	<script th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+	<script th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.js}"></script>
+	<script
+		th:src="@{/plugins/input-mask/jquery.inputmask.date.extensions.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.extensions.js}"></script>
+	<script th:src="@{/plugins/timepicker/bootstrap-timepicker.min.js}"></script>
+	<script
+		th:src="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+	<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script th:src="@{/dist/js/demo.js}"></script>
+	<script type="text/javascript">
+		// 是否置顶图片 
+		var topimage = function(obj, objInput, fileInput, tag) {
+			var operateTag = $("#" + tag).val();
+			var isTop = $("#" + objInput).val();
+			if (isTop == '0') {
+				if (operateTag == '0' /*<![CDATA[*/
+						&& /* ]]> */$("#" + fileInput).val() == "") {
+					if ($("#oldTopImageName").val() == '') {
+						alert("请上传置顶图片");
+						return;
+					}
+				}
+				$("#" + objInput).val(1);
+				$(obj).val("取消置顶");
+			} else if (isTop == '1') {
+				$("#" + objInput).val(0);
+				$(obj).val("置顶");
+			}
+		}
+
+		// 是否置顶图片
+		var recommendimage = function(obj, objInput, fileInput, tag) {
+			var operateTag = $("#" + tag).val();
+			var isTop = $("#" + objInput).val();
+			if (isTop == '0') {
+				if (operateTag == '0' /*<![CDATA[*/
+						&& /* ]]> */$("#" + fileInput).val() == "") {
+					if ($("#oldRecommendImageName").val() == '') {
+						alert("请上传推荐图片");
+						return;
+					}
+				}
+				$("#" + objInput).val(1);
+				$(obj).val("取消推荐");
+			} else if (isTop == '1') {
+				$("#" + objInput).val(0);
+				$(obj).val("推荐");
+			}
+		}
+
+		var advanceConfirm = function() {
+
+			var top = $("#isChangeTop").val();
+			if (top == '1') {
+				if ($("#topimginput").val() == "") {
+					alert("请上传置顶图片。");
+					return;
+				}
+			}
+			var recommend = $("#isChangeRecommendImage").val();
+			if (recommend == '1') {
+				if ($("#recommendimginput").val() == "") {
+					alert("请上传推荐图片。");
+					return;
+				}
+			}
+
+			if ($("#isrecommendinput").val() == $("#recommendTag").val() /*<![CDATA[*/
+					&& /* ]]> */$("#istopinput").val() == $("#topTag").val() /*<![CDATA[*/
+					&& /* ]]> */$("#topTag").val() == 0/*<![CDATA[*/
+					&& /* ]]> */$("#recommendTag").val() == 0) {
+				alert("未做任何修改。");
+				return;
+			}
+
+			if ($("#isrecommendinput").val() == $("#recommendTag").val() /*<![CDATA[*/
+					&& /* ]]> */$("#istopinput").val() == $("#topTag").val() /*<![CDATA[*/
+					&& /* ]]> */$("#isChangeTop").val() == 0/*<![CDATA[*/
+					&& /* ]]> */$("#isChangeRecommend").val() == 0) {
+				alert("未做任何修改。");
+				return;
+			}
+
+			if ($("#topTag").val() == 0 /*<![CDATA[*/
+					&& /* ]]> */$("#topimginput").val() == '' /*<![CDATA[*/
+					&& /* ]]> */$("#istopinput").val() == '1') {
+				if ($("#oldTopImageName").val() == "") {
+					alert("请上传置顶图片");
+					return;
+				}
+			}
+
+			if ($("#recommendTag").val() == 0 /*<![CDATA[*/
+					&& /* ]]> */$("#recommendimginput").val() == '' /*<![CDATA[*/
+					&& /* ]]> */$("#isrecommendinput").val() == '1') {
+				if ($("#oldRecommendImageName").val() == "") {
+					alert("请上传推荐图片。");
+					return;
+				}
+			}
+
+			$("#confirmDialog").show('fast');
+
+		}
+
+		//略缩图开始
+
+		var allowExt = [ 'jpg', 'gif', 'bmp', 'png', 'jpeg' ];
+		var imgname;
+		var imgs;
+		var preivew = function(file, objName, container, changeTag) {
+			imgname = file.value;
+			imgs = imgname.split(".");
+			if (imgs.length == 0) {
+				alert("所选文件不是图片格式文件！");
+				var file = $("#file")
+				file.after(file.clone().val(""));
+				file.remove();
+				document.getElementById(container).alt = "未选择图片";
+				document.getElementById(container).src = "";
+				return;
+			}
+			imgname = imgs[imgs.length - 1];
+			if (!(imgname == "png" || imgname == "jpg" || imgname == "jpeg"
+					|| imgname == "bmp" || imgname == "gif")) {
+				alert("所选文件不是图片格式文件！");
+				var file = $("#" + objName)
+				file.after(file.clone().val(""));
+				file.remove();
+				document.getElementById(container).alt = "未选择图片";
+				document.getElementById(container).src = "";
+				return;
+			}
+			$("#" + changeTag).val(1);
+			try {
+				var pic = new Picture(file, document.getElementById(container));
+			} catch (e) {
+				alert(e);
+			}
+		}
+		//缩略图类定义 
+		var Picture = function(file, container) {
+			var height = 0, widht = 0, ext = '', size = 0, name = '', path = '';
+			var self = this;
+			if (file) {
+				path = getImgUrl(file.id);
+				name = file.value;
+				if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+					file.select();
+					path = document.selection.createRange().text;
+				} else if (window.navigator.userAgent.indexOf("Firefox") >= 1) {
+					if (file.files) {
+						path = file.files.item(0).getAsDataURL();
+					} else {
+						path = file.value;
+					}
+				}
+			} else {
+				throw '无效的文件';
+			}
+			ext = name.substr(name.lastIndexOf("."), name.length);
+			if (container.tagName.toLowerCase() != 'img') {
+				throw '不是一个有效的图片容器';
+				container.visibility = 'hidden';
+			}
+			container.src = path;
+			container.alt = name;
+			container.style.visibility = 'visible';
+			size = container.fileSize;
+			this.get = function(name) {
+				return self[name];
+			}
+			this.isValid = function() {
+				if (allowExt.indexOf(self.ext) !== -1) {
+					throw '不允许上传该文件类型';
+					return false;
+				}
+			}
+		}
+
+		var getImgUrl = function(sourceId) {
+			var url;
+			if (navigator.userAgent.indexOf("MSIE") >= 1) { // IE 
+				url = document.getElementById(sourceId).value;
+			} else if (navigator.userAgent.indexOf("Firefox") > 0) { // Firefox 
+				url = window.URL.createObjectURL(document
+						.getElementById(sourceId).files.item(0));
+			} else if (navigator.userAgent.indexOf("Chrome") > 0) { // Chrome 
+				url = window.URL.createObjectURL(document
+						.getElementById(sourceId).files.item(0));
+			}
+			return url;
+		}
+
+		//略缩图结束
+
+		var clearImg = function(imgInput, imgTag, changeTag) {
+			var imtDom = document.getElementById(imgInput);
+			if (imtDom.value == '' || imtDom.value == null) {
+				return;
+			}
+			var file = $("#" + imgInput);
+			file.after(file.clone().val(""));
+			file.remove();
+			document.getElementById(imgTag).alt = "";
+			document.getElementById(imgTag).src = "";
+			$("#" + changeTag).val(0);
+		}
+
+		//点击任何元素关闭一下的弹窗 
+		$(document).click(function() {
+			$("#msgDialog").hide("fast");
+			$("#confirmDialog").hide("fast");
+		});
+
+		// 过滤掉id为以下名元素的点击关闭弹窗的方法
+		$("#msgDialog").click(function(event) {
+			event.stopPropagation();
+		});
+
+		$("#confirmDialog").click(function(event) {
+			event.stopPropagation();
+		});
+
+		$("#advancebtn").click(function(event) {
+			event.stopPropagation();
+		});
+
+		//关闭弹出窗口的通用方法
+		var deleteDialogWindow = function(objectName) {
+			$("#" + objectName).hide("slow");
+		}
+
+		//确认修改
+		var advanceConfrimGoodsItem = function() {
+			$("#advanceForm").submit();
+		}
+	</script>
+
+</body>
+</html>

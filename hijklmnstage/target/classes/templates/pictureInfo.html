@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Hijklmn|picture|info</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css}" />
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css}" />
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<!-- iCheck -->
+<link rel="stylesheet" th:href="@{/plugins/iCheck/square/blue.css}" />
+<style>
+html {
+	height: 120%;
+	width: 100%;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-image: url("/img/ocean.jpg");
+}
+
+ul li {
+	list-style: none;
+}
+
+li:hover {
+	cursor: pointer
+}
+
+#inputtext {
+	background-color: transparent;
+}
+</style>
+</head>
+<body class="skin-blue sidebar-mini">
+
+	<div style="position: fixed; z-index: 3; width: 100%; height: 35px; top: 0px; padding-top:15px;">
+		<ul>
+			<li><a onclick="javascript:history.back(-1);"><strong>back</strong></a></li>
+		</ul>
+	</div>
+
+	<div style="width: 100%; padding-top: 50px; padding-bottom: 30px;">
+		<div class="wrapper">
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="nav-tabs-custom">
+							<div class="tab-content">
+								<div class="active tab-pane" id="activity">
+									<div class="post">
+
+										<div class="user-block">
+											<label th:text="${item.title}"></label><br />
+										</div>
+
+										<div class="row margin-bottom">
+
+											<div class="col-sm-12">
+												<center>
+													<img class="img-responsive"
+														th:src="${mediaserver+item.picUrl+item.picName}"
+														th:alt="${item.title}"/>
+												</center>
+											</div>
+
+										</div>
+
+										<p>
+											<i class="fa fa-user bg-aqua"></i><span>&nbsp;&nbsp;</span><label
+												th:text="${item.author}"> </label>
+										</p>
+
+										<p>
+											<i class="fa fa-clock-o bg-aqua"></i>
+											<span th:text="${#dates.format(item.onlineDatetime,'yyyy-MM-dd HH:mm:ss')}"> </span>
+										</p>
+										
+										<p> 
+											<i class="fa fa-link bg-aqua"></i>
+											<span th:text="${item.source}"> </span>
+										</p>
+
+										<p>
+											<i class="fa fa-flag-o bg-aqua"></i>
+											<span class="label label-info"
+												th:each="ite : ${#strings.arraySplit(item.tag,',')}"
+												th:text="${ite}"></span>
+										</p>
+
+	 									<p>
+											<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											<span th:text="${item.picDesc}"> </span>
+										</p>
+
+									</div>
+									
+									<div class="post clearfix" th:each="item : ${items}">
+					                  <div class="user-block">
+					                    <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image"/>
+					                        <span class="username">
+					                          <a th:text="${item.author}"></a>
+					                        </span>
+					                    <span class="description" th:text="${#dates.format(item.writeDate,'yyyy-MM-dd HH:mm:ss')}"></span>
+					                  </div>
+					                  <p>
+										<span th:text="${item.content}"></span>
+					                  </p>
+					                    <ul class="list-inline">
+											<li class="pull-right"><a class="link-black text-sm">
+													<i class="fa fa-thumbs-o-up margin-r-5"></i>Like <span
+													th:text="${item.favourNumber}"></span>
+											</a></li>
+										</ul>
+					                </div>
+					                
+					                <div class="post clearfix">
+					                	<form class="form-horizontal">
+					                    <div class="form-group margin-bottom-none">
+					                      <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+					                        <input class="form-control input-sm" placeholder="Response"/>
+					                      </div>
+					                      <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					                        <button type="submit" class="btn btn-danger pull-right btn-block btn-sm">Send</button>
+					                      </div>
+					                    </div>
+					                  </form>
+					                </div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<div style="position: fixed; bottom: 0px; width: 100%; height: 60px; line-height: 60px;">
+		<ul>
+			<li><a onclick="picture();"><strong>home</strong></a></li>
+			<form id="homeForm" action="/"></form>
+		</ul>
+	</div>
+
+	<!-- jQuery 2.2.3 -->
+	<script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+	<!-- iCheck -->
+	<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+
+	<script>
+		//打开模态框
+		var openOperateResultWindow = function() {
+			$("#operateResult").modal("show");
+		}
+
+		//通知消息窗口
+		var openJSNoticeWindow = function(content) {
+			$("#notice_content").text(content);
+			$("#jsNoticeWindow").modal("show");
+		}
+
+		//判断为空的方法
+		var empty = function(val) {
+			if (val == null || val == '') {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		// 跳转图片浏览
+		var picture = function() {
+			document.getElementById("homeForm").submit();
+		}
+		
+	</script>
+</body>
+</html>

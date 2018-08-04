@@ -1,0 +1,58 @@
+package edu.guosong.sc.hijklmndbserver.controller;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import edu.guosong.sc.hijklmncommon.dto.RequestResult;
+import edu.guosong.sc.hijklmncommon.dto.UserDTO;
+import edu.guosong.sc.hijklmncommon.param.WebOption;
+import edu.guosong.sc.hijklmncommon.po.User;
+import edu.guosong.sc.hijklmncommon.util.JSONUtil;
+import edu.guosong.sc.hijklmndbserver.common.ControllerHandler;
+import edu.guosong.sc.hijklmndbserver.service.IUserService;
+
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+	@Autowired
+	private IUserService userService;
+
+	@RequestMapping(value = "/login")
+	public RequestResult login(@RequestBody UserDTO userDTO) {
+		return ControllerProxy.handler(new ControllerHandler() {
+			@Override
+			public void assemble(RequestResult requestResult) {
+				requestResult.put(WebOption.ITEM, JSONUtil.bean2Str(userService.queryUser(userDTO)));
+			}
+		});
+	}
+
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	public RequestResult addUser(@RequestBody User user) {
+		return ControllerProxy.handler(new ControllerHandler() {
+			@Override
+			public void assemble(RequestResult requestResult) {
+				user.setCreateDatetime(new Date());
+				user.setIsvalid(1);
+				requestResult.put(WebOption.RESULT, userService.addUser(user));
+			}
+		});
+	}
+
+	@RequestMapping(value = "/queryUser", method = RequestMethod.POST)
+	public RequestResult queryUser(@RequestBody UserDTO userDTO) {
+		return ControllerProxy.handler(new ControllerHandler() {
+			@Override
+			public void assemble(RequestResult requestResult) {
+				requestResult.put(WebOption.ITEMS, JSONUtil.bean2Str(userService.queryUserList(userDTO)));
+			}
+		});
+	}
+
+}

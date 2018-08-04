@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>allgoodsitem</title>
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/skins/_all-skins.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/morris.js/morris.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/jvectormap/jquery-jvectormap.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-daterangepicker/daterangepicker.css}" />
+<link rel="stylesheet"
+	th:href="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}" />
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header class="main-header">
+			<a th:href="@{/home}" class="logo"> <span class="logo-mini"><b>A</b>dmin</span>
+				<span class="logo-lg"><b>Admin</b></span>
+			</a>
+			<nav class="navbar navbar-static-top">
+				<a class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu"><a
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								th:src="@{/dist/img/user2-160x160.jpg}" class="user-image"
+								alt="User Image" /> <span class="hidden-xs"
+								th:text="${session.user.username}"></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li class="user-header"><img
+									th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+									alt="User Image" />
+									<p th:text="${session.user.username}"></p>
+									<p>
+										<small><span>最近登录时间：</span><span
+											th:text="${#dates.format(session.user.lastLoginDatetime,'yyyy-MM-dd HH:mm:ss')}"></span></small>
+									</p></li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a th:href="@{/logout}" class="btn btn-default btn-flat">Log
+											out</a>
+									</div>
+								</li>
+							</ul></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+							alt="User Image" />
+					</div>
+					<div class="pull-left info">
+						<p>
+							<span th:text="${session.user.username}"></span>
+						</p>
+						<a><i class="fa fa-circle text-success"></i> Online</a>
+					</div>
+				</div>
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">MAIN NAVIGATION</li>
+					<tr th:each="prod : ${prods}">
+						<td th:text="${prod.name}">Onions</td>
+						<td th:text="${prod.price}">2.41</td>
+						<td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+					</tr>
+					<li th:each="optionCard : ${session.optionCards}"><a
+						th:href="${optionCard.requestUrl}"><i
+							class="fa fa-circle-o text-aqua"></i><span
+							th:text="${optionCard.optionName}"></span></a></li>
+				</ul>
+			</section>
+		</aside>
+		<div class="content-wrapper">
+			<section class="content-header">
+				<h1>
+					Admin <small>商品发布-全部商品</small>
+				</h1>
+			</section>
+			<!-- 控制台 -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box">
+
+							<div class="box-tools pull-left">
+								<ul class="nav nav-pills">
+									<li role="presentation" class="active"><a
+										href="/goods/allGoodsItem">全部商品</a></li>
+									<li role="presentation"><a href="/goods/goodsItemSaleing">出售中</a></li>
+									<li role="presentation"><a href="/goods/goodsItemSaled">已售完</a></li>
+									<li role="presentation"><a href="/goods/unShelveGoodsItem">已下架</a></li>
+									<li role="presentation"><a
+										href="/goods/goodsItemRepository">商品仓库</a></li>
+								</ul>
+							</div>
+
+							<div class="box-tools pull-right">
+								<form id="toAddGoodsItemForm" action="/goods/toAddGoodsItem"
+									method="post"></form>
+								<button id="addbtn" class="btn bg-purple btn-flat margin"
+									th:onclick="'javascript:toAddGoodsItem(\'toAddGoodsItemForm\');'">添加商品</button>
+							</div>
+
+							<div class="box-body">
+								<form id="upForm" action="/goodsClass/upGoodsClass"
+									method="post">
+									<input type="hidden" name="itemId" id="upItemId" />
+								</form>
+								<form id="downForm" action="/goodsClass/downGoodsClass"
+									method="post">
+									<input type="hidden" name="itemId" id="downItemId" />
+								</form>
+								<table id="example2"
+									class="table table-bordered table-condensed table-hover"
+									style="word-break: break-all; word-wrap: break-all;">
+									<thead>
+										<tr>
+											<th><center>商品描述</center></th>
+											<th><center>价格</center></th>
+											<th><center>销量</center></th>
+											<th><center>库存</center></th>
+											<th><center>创建时间</center></th>
+											<!-- <th><center>操作</center></th> -->
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="goodsItem : ${page.itemList}">
+											<td><div
+													style="height: 80px; width: auto; max-length: 300px;">
+													<div
+														style="height: 80px; width: auto; max-width: 80px; float: left;">
+														<img th:src="${imageUrl+goodsItem.goodsImage}"
+															alt="${goodsItem.goodsName}"
+															class="img-responsive img-rounded"
+															style="width: 80px; height: 80px;" />
+													</div>
+													<div
+														style="height: 80px; width: auto; float: left; padding-left: 10px;">
+														<span th:if="${goodsItem.isTop == 1}"><font
+															color="#dd4b39">[置顶商品]</font></span><br
+															th:if="${goodsItem.isTop == 0}"></br> <span
+															th:if="${goodsItem.isTop == 1}"></span> <br
+															th:if="${goodsItem.isTop == 1}"></br> <span
+															th:if="${goodsItem.isRecommend == 1}"><font
+															color="#dd4b39">[店长推荐]</font></span><br
+															th:if="${goodsItem.isRecommend == 1}"></br> <span
+															th:text="${goodsItem.goodsName}"></span>
+													</div>
+												</div></td>
+											<td class="center" style="padding-top: 20px; height: 60px;"><span
+												th:text="${goodsItem.price}"></span></td>
+											<td class="center" style="padding-top: 20px; height: 60px;"><span
+												th:text="${goodsItem.sellNumber}"></span></td>
+											<td class="center" style="padding-top: 20px; height: 60px;"><span
+												th:text="${goodsItem.number}"></span></td>
+											<td class="center" style="padding-top: 20px; height: 60px;"><span
+												th:text="${#dates.format(goodsItem.createDate,'yyyy-MM-dd')}"></span><br />
+												<span
+												th:text="${#dates.format(goodsItem.createDate,'HH:mm:ss')}"></span>
+											</td>
+											<!-- <td class="center" style="padding-top: 20px; height: 60px;"><p>
+													<a>商品推荐</a><br /> <a>下架</a>
+												</p></td> -->
+										</tr>
+									</tbody>
+									<tfoot>
+										<th><center>商品描述</center></th>
+										<th><center>价格</center></th>
+										<th><center>销量</center></th>
+										<th><center>库存</center></th>
+										<th><center>创建时间</center></th>
+										<!-- <th><center>操作</center></th> -->
+									</tfoot>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 消息窗口 -->
+			<div id="msgDialog" class="box box-solid bg-light-blue-gradient"
+				style="width: 360px;" th:if="${operateResult != null}">
+				<div class="box-header">
+					<i class="fa fa-comments"></i><label>你有一条通知信息</label>
+					<div class="box-tools pull-right">
+						<button class="btn btn-primary btn-sm"
+							th:onclick="'javascript:deleteDialogWindow(\'msgDialog\');'">
+							<i class="fa fa-times"></i>
+						</button>
+					</div>
+				</div>
+				<div class="box-body border-radius-none">
+					<div class="chart" id="line-chart" style="height: 120px;">
+						<div class="form-group">
+							<label></label>
+							<p>
+								<label th:text="${operateResult}"></label>
+							</p>
+						</div>
+						<div class="form-group box-tools pull-right">
+							<button class="btn bg-maroon btn-flat margin"
+								th:onclick="'javascript:deleteDialogWindow(\'msgDialog\');'">
+								确 定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 2.4.0
+			</div>
+			<strong>Copyright &copy; 2014-2016 <a
+				th:href="@{https://adminlte.io}">Almsaeed Studio</a>.
+			</strong> All rights reserved.
+		</footer>
+	</div>
+
+	<style>
+.center {
+	height: 80px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#msgDialog {
+	position: absolute;
+	z-index: 993;
+	top: 50%;
+	left: 50%;
+	margin-top: -92px;
+	margin-left: -180px;
+}
+</style>
+
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script th:src="@{/bower_components/jquery-ui/jquery-ui.min.js}"></script>
+	<script>
+		$.widget.bridge('uibutton', $.ui.button);
+	</script>
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script th:src="@{/bower_components/raphael/raphael.min.js}"></script>
+	<script th:src="@{/bower_components/morris.js/morris.min.js}"></script>
+	<script
+		th:src="@{/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js}"></script>
+	<script th:src="@{/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+	<script
+		th:src="@{/plugins/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+	<script
+		th:src="@{/bower_components/jquery-knob/dist/jquery.knob.min.js}"></script>
+	<script th:src="@{/bower_components/moment/min/moment.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-daterangepicker/daterangepicker.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+	<script
+		th:src="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+	<script
+		th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+	<script th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script th:src="@{/dist/js/pages/dashboard.js}"></script>
+	<script th:src="@{/dist/js/demo.js}"></script>
+
+	<script type="text/javascript">
+		//点击任何元素关闭一下的弹窗 
+		$(document).click(function() {
+			$("#msgDialog").hide("fast");
+		});
+
+		// 过滤掉id为以下名元素的点击关闭弹窗的方法
+		$("#msgDialog").click(function(event) {
+			event.stopPropagation();
+		});
+
+		$("#addbtn").click(function(event) {
+			$("#msgDialog").hide("fast");
+		});
+
+		var toAddGoodsItem = function(objName) {
+			$("#" + objName).submit();
+		}
+
+		//关闭弹出窗口的通用方法
+		var deleteDialogWindow = function(objectName) {
+			$("#" + objectName).hide("slow");
+		}
+
+		// 弹出确认删除商品类别名称的窗口
+		var deleteDialog = function(goodsClassItemId, goodsItemClassName) {
+			var itemId = goodsClassItemId;
+			var itemName = goodsItemClassName;
+			$("#addDialog").hide();
+			$("#editDialog").hide();
+			$("#deleteGoodsClassItemId").val(itemId);
+			$("#deleteGoodsClassItemName").html(goodsItemClassName);
+			$("#deleteDialog").show("fast");
+		}
+
+		// 弹出修改商品类别名称的窗口
+		var editDialog = function(goodsClassItemId, goodsClassItemName) {
+			var itemName = goodsClassItemId;
+			var goodsClassItemName = goodsClassItemName;
+			$("#addDialog").hide();
+			$("#deleteDialog").hide();
+			$("#editOldGoodsClassItemName").html(goodsClassItemName);
+			$("#editGoodsClassItemId").val(goodsClassItemId);
+			$("#editDialog").show("fast");
+		}
+
+		// 弹出添加商品类别名称的窗口
+		var addDialog = function() {
+			$("#editDialog").hide();
+			$("#deleteDialog").hide();
+			$("#addGoodsClassItemName").val("");
+			$("#addDialog").show("fast");
+		}
+	</script>
+
+</body>
+</html>

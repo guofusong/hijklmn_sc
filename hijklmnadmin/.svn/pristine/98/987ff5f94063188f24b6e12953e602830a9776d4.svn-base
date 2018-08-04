@@ -1,0 +1,6 @@
+server.port = 10010
+spring.application.name = hijklmnadmin
+eureka.instance.perfer-ip-address=true
+eureka.client.serviceUrl.defaultZone = http://192.168.1.200:1111/eureka/
+#,http://kangsen:1112/eureka/
+spring.devtools.restart.trigger-file = restart.my

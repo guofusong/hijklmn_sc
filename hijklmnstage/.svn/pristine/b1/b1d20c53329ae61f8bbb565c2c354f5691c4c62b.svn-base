@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>Hijklmn</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<!-- Bootstrap 3.3.6 -->
+<link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+<!-- Font Awesome -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css}" />
+<!-- Ionicons -->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css}" />
+<!-- Theme style -->
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<!-- iCheck -->
+<link rel="stylesheet" th:href="@{/plugins/iCheck/square/blue.css}" />
+<style>
+html {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-image: url("/img/ocean.jpg");
+}
+
+ul li{
+	list-style:none;
+	float:left;
+}
+
+li:hover{
+	cursor:pointer
+}
+
+</style>
+</head>
+<body>
+
+<ul class="nav nav-pills">
+	<li><a onclick="picture();"><strong>picture</strong></a></li>
+	<li><a onclick="music();"><strong>music</strong></a></li>
+	<li><a onclick="video();"><strong>video</strong></a></li>
+</ul>
+	
+<form id="pictureForm" action="/picture/view"></form>
+<form id="videoForm" action="/video/view"></form>
+
+<!-- jQuery 2.2.3 -->
+<script th:src="@{/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+<!-- Bootstrap 3.3.6 -->
+<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+<!-- iCheck -->
+<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+
+<script>
+	//打开模态框
+	var openOperateResultWindow = function() {
+		$("#operateResult").modal("show");
+	}
+
+	//通知消息窗口
+	var openJSNoticeWindow = function(content) {
+		$("#notice_content").text(content);
+		$("#jsNoticeWindow").modal("show");
+	}
+
+	//判断为空的方法
+	var empty = function(val) {
+		if (val == null || val == '') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// 跳转图片浏览
+	var picture = function() {
+		document.getElementById("pictureForm").submit();
+	}
+	
+	// 跳转视频浏览
+	var video = function(){
+		document.getElementById("videoForm").submit();
+	}
+	
+</script>
+</body>
+</html>

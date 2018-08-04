@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.guosong.sc.hijklmndbserver.mapper.PictureCommentMapper">
+  <resultMap id="BaseResultMap" type="edu.guosong.sc.hijklmncommon.po.PictureComment">
+    <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="picture_id" jdbcType="VARCHAR" property="pictureId" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="favour_number" jdbcType="INTEGER" property="favourNumber" />
+    <result column="write_date" jdbcType="TIMESTAMP" property="writeDate" />
+    <result column="isvalid" jdbcType="INTEGER" property="isvalid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    comment_id, picture_id, author, content, favour_number, write_date, isvalid
+  </sql>
+  
+  	<sql id="query_picturecomment_where">
+		<where>
+			<if test="commentId != null">
+				comment_id = #{commentId}
+			</if>
+			<if test="pictureId != null">
+				AND picture_id = #{pictureId}
+			</if>
+			<if test="author != null">
+				AND author = #{author}
+			</if>
+			<if test="content != null">
+				AND content = #{content}
+			</if>
+			<if test="favourNumber != null">
+				AND favour_number = #{favourNumber}
+			</if>
+			<if test="writeDate != null">
+				AND write_date = #{writeDate}
+			</if>
+			<if test="isvalid != null">
+				AND isvalid = #{isvalid}
+			</if>
+		</where>
+	</sql>
+
+	<sql id="query_picturecomment_desc">
+		<if test="sequence == 1 and sortField != null">
+			order by #{sortField} desc
+		</if>
+		<if test="sequence == 0 and sortField != null">
+			order by #{sortField} asc
+		</if>
+	</sql>
+
+	<sql id="query_picturecomment_page">
+		<if test="index != null and size != null">
+			limit #{index} , #{size}
+		</if>
+		<if test="index != null and size == null">
+			limit #{index}
+		</if>
+	</sql>
+  
+  	<select id="queryList" parameterType="edu.guosong.sc.hijklmncommon.dto.PictureCommentDTO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from picture_comment
+		<include refid="query_picturecomment_where" />
+		order by write_date , favour_number desc 
+		<include refid="query_picturecomment_page" />
+	</select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from picture_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from picture_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="edu.guosong.sc.hijklmncommon.po.PictureComment">
+    insert into picture_comment (comment_id, picture_id, author, 
+      content, favour_number, write_date, 
+      isvalid)
+    values (#{commentId,jdbcType=INTEGER}, #{pictureId,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{favourNumber,jdbcType=INTEGER}, #{writeDate,jdbcType=TIMESTAMP}, 
+      #{isvalid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="edu.guosong.sc.hijklmncommon.po.PictureComment">
+    insert into picture_comment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        comment_id,
+      </if>
+      <if test="pictureId != null">
+        picture_id,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="favourNumber != null">
+        favour_number,
+      </if>
+      <if test="writeDate != null">
+        write_date,
+      </if>
+      <if test="isvalid != null">
+        isvalid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commentId != null">
+        #{commentId,jdbcType=INTEGER},
+      </if>
+      <if test="pictureId != null">
+        #{pictureId,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="favourNumber != null">
+        #{favourNumber,jdbcType=INTEGER},
+      </if>
+      <if test="writeDate != null">
+        #{writeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isvalid != null">
+        #{isvalid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="edu.guosong.sc.hijklmncommon.po.PictureComment">
+    update picture_comment
+    <set>
+      <if test="pictureId != null">
+        picture_id = #{pictureId,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="favourNumber != null">
+        favour_number = #{favourNumber,jdbcType=INTEGER},
+      </if>
+      <if test="writeDate != null">
+        write_date = #{writeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isvalid != null">
+        isvalid = #{isvalid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="edu.guosong.sc.hijklmncommon.po.PictureComment">
+    update picture_comment
+    set picture_id = #{pictureId,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      favour_number = #{favourNumber,jdbcType=INTEGER},
+      write_date = #{writeDate,jdbcType=TIMESTAMP},
+      isvalid = #{isvalid,jdbcType=INTEGER}
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+</mapper>

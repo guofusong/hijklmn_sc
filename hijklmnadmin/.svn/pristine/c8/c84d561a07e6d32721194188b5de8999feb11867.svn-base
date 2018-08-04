@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>修改商品信息</title>
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-daterangepicker/daterangepicker.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" />
+<link rel="stylesheet" th:href="@{/plugins/iCheck/all.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/plugins/timepicker/bootstrap-timepicker.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/select2/dist/css/select2.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/skins/_all-skins.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css}" />
+<link rel="stylesheet"
+	th:href="@{https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic}" />
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+	<!-- 删除商品确认框 -->
+	<div id="editwindow" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<label><span class="glyphicon glyphicon-trash"></span>&nbsp;商品</label>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label id="suretag"></label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="form-group box-tools pull-right">
+						<button class="btn btn-default btn-flat"
+							th:onclick="'javascript:closewindow(\'editwindow\');'">取
+							消</button>
+						<button class="btn bg-maroon btn-flat"
+							th:onclick="'javascript:editConfrimGoodsItem();'">确 定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 通知弹出框 -->
+	<div id="jsNoticeWindow" class="modal fade bs-example-modal-sm"
+		tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 footer-item">
+									<label id="notice_content"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 通知弹出框 -->
+	<div id="operateResultWindow" th:if="${operateResult != null}"
+		class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+		aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 footer-item">
+									<label th:text="${operateResult}"></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="wrapper">
+		<header class="main-header">
+			<a th:href="@{/home}" class="logo"> <span class="logo-mini"><b>A</b>dmin</span>
+				<span class="logo-lg"><b>Admin</b></span>
+			</a>
+			<nav class="navbar navbar-static-top">
+				<a class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu"><a
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								th:src="@{/dist/img/user2-160x160.jpg}" class="user-image"
+								alt="User Image" /> <span class="hidden-xs"
+								th:text="${session.user.username}"></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li class="user-header"><img
+									th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+									alt="User Image" />
+									<p th:text="${session.user.username}"></p>
+									<p>
+										<small><span>最近登录时间：</span><span
+											th:text="${#dates.format(session.user.lastLoginDatetime,'yyyy-MM-dd HH:mm:ss')}"></span></small>
+									</p></li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a th:href="@{/logout}" class="btn btn-default btn-flat">Log
+											out</a>
+									</div>
+								</li>
+							</ul></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+							alt="User Image" />
+					</div>
+					<div class="pull-left info">
+						<p>
+							<span th:text="${session.user.username}"></span>
+						</p>
+						<a><i class="fa fa-circle text-success"></i> Online</a>
+					</div>
+				</div>
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">MAIN NAVIGATION</li>
+					<tr th:each="prod : ${prods}">
+						<td th:text="${prod.name}">Onions</td>
+						<td th:text="${prod.price}">2.41</td>
+						<td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+					</tr>
+					<li th:each="optionCard : ${session.optionCards}"><a
+						th:href="${optionCard.requestUrl}"><i
+							class="fa fa-circle-o text-aqua"></i><span
+							th:text="${optionCard.optionName}"></span></a></li>
+				</ul>
+			</section>
+		</aside>
+		<div class="content-wrapper">
+			<section class="content-header">
+				<h1>
+					Admin <small>商品发布-修改商品</small>
+				</h1>
+			</section>
+			<!-- 控制台 -->
+			<section class="content">
+				<div class="row">
+					<div class="col-xs-12">
+
+						<!-- 内容开始 -->
+
+						<div class="box box-default">
+							<div class="box-header with-border">
+								<h1 class="box-title">
+									<small>添加商品信息</small>
+								</h1>
+							</div>
+							<div class="box-body">
+								<div class="row">
+									<div class="col-md-12">
+										<form id="editForm" action="/goods/editGoodsItem"
+											method="post" enctype="multipart/form-data">
+											<input type="hidden" name="itemId"
+												th:value="${goodsItem.goodsId}" />
+											<div class="form-group">
+												<label>商品原图片 </label>
+												<div class="timeline-body">
+													<img th:src="${imageUrl+goodsItem.goodsImage}"
+														style="width: 210px; height: 120px;" alt="商品图片"
+														class="margin" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label>商品新图片</label>
+												<div class="timeline-body">
+													<img id="img"
+														style="visibility: hidden; width: 210px; height: 120px;"
+														alt="商品图片" class="margin" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<input id="goodsItemImgInput" name="goodsItemImage"
+													type="file"
+													th:onchange="'javascript:preivew(this,\'img\');'" />
+											</div>
+											<div class="form-group">
+												<input id="goodsItemImgInputBtn"
+													class="btn bg-purple margin" type="button" value="清空图片"
+													th:onclick="'javascript:clearImg(\'goodsItemImgInput\',\'img\');'" />
+											</div>
+
+											<div class="form-group">
+												<label>商品标题 <font color="red">*</font></label> <input
+													th:onchange="'javascript:checkItemNameExist(\'goodsItemName\');'"
+													name="goodsItemName" type="text" class="form-control"
+													id="goodsItemName" maxlength="20" placeholder="请输入商品标题"
+													th:value="${goodsItem.goodsName}" />
+											</div>
+
+											<div class="form-group">
+												<label>商品类目 <font color="red">*</font></label> <select
+													th:if="${not #lists.isEmpty(goodsClassItems)}"
+													class="form-control select2" style="width: 100%;"
+													name="goodsClassItemId" id="goodsClassItemId">
+													<option th:each="goodsClassItem : ${goodsClassItems}"
+														th:value="${goodsClassItem.id}"
+														th:text="${goodsClassItem.itemName}"
+														th:if="${goodsClassItem.id == goodsItem.goodsClassItemId}"></option>
+													<option th:each="goodsClassItem : ${goodsClassItems}"
+														th:value="${goodsClassItem.id}"
+														th:text="${goodsClassItem.itemName}"
+														th:if="${goodsClassItem.id != goodsItem.goodsClassItemId}"></option>
+												</select> <input type="hidden" id="oldGoodsClassItemId"
+													th:value="${goodsItem.goodsClassItemId}" />
+											</div>
+
+											<div class="form-group">
+												<label>商品价格（元） <font color="red">*</font></label> <input
+													id="goodsItemPrice" name="goodsItemPrice" type="text"
+													class="form-control" placeholder="请输入商品价格"
+													th:value="${goodsItem.price}" /> <input type="hidden"
+													id="oldGoodsItemPrice" th:value="${goodsItem.price}" />
+											</div>
+
+											<div class="form-group">
+												<label>商品积分<font color="red">*</font></label> <input
+													id="goodsItemPoint" name="goodsItemPoint" type="text"
+													class="form-control" th:value="${goodsItem.point}"
+													placeholder="请输入商品积分" />
+											</div>
+
+											<div class="form-group">
+												<label>购买商品获得积分<font color="red">*</font></label> <input
+													id="goodsItemObtainPoint" name="goodsItemObtainPoint"
+													type="text" class="form-control"
+													th:value="${goodsItem.obtainPoint}"
+													placeholder="请输入购买商品获得积分" />
+											</div>
+
+											<div class="form-group">
+												<label>支付方式<font color="red">*</font></label> <select
+													class="form-control select2" style="width: 100%;"
+													name="goodsItemPayWay">
+													<option value="1" th:selected="${goodsItem.payWay==1}">人民币</option>
+													<option value="2" th:selected="${goodsItem.payWay==2}">积分</option>
+													<option value="3" th:selected="${goodsItem.payWay==3}">人民币和积分</option>
+												</select>
+											</div>
+
+											<div class="form-group">
+												<label>商品库存 <font color="red">*</font></label> <input
+													id="goodsItemNumber" name="goodsItemNumber" type="text"
+													class="form-control" placeholder="请输入商品库存"
+													th:value="${goodsItem.number}" />
+											</div>
+
+											<div class="form-group">
+												<label>单位 <font color="red">*</font></label> <select
+													th:if="${not #lists.isEmpty(goodsUnits)}"
+													class="form-control select2" style="width: 100%;"
+													name="goodsItemUnit">
+													<option th:each="goodsUnit : ${goodsUnits}"
+														th:if="${goodsUnit == goodsItem.goodsUnit}"
+														th:value="${goodsUnit}" th:text="${goodsUnit}"></option>
+													<option th:each="goodsUnit : ${goodsUnits}"
+														th:if="${goodsUnit != goodsItem.goodsUnit}"
+														th:value="${goodsUnit}" th:text="${goodsUnit}"></option>
+												</select>
+											</div>
+
+											<div class="form-group">
+												<label>规格 <font color="red">*</font></label> <input
+													id="goodsItemSpecification" type="text"
+													name="goodsItemSpecification" class="form-control"
+													placeholder="请输入商品规格" th:value="${goodsItem.specification}" />
+											</div>
+
+											<div class="form-group">
+												<label>商品详情</label>
+												<div class="box-header"></div>
+												<div class="box-body pad">
+													<textarea id="editor1" name="goodsItemDetail" rows="10"
+														cols="80"><span th:if="${goodsDetail != null}"
+															th:value="${goodsDetail.content}"></span>
+									                    </textarea>
+													<input type="hidden" name="isShelve" id="isShelveInput" />
+												</div>
+											</div>
+										</form>
+
+										<div class="form-group">
+											<button id="repositoryBtn"
+												th:onclick="'javascript:editGoodsItem();'"
+												class="btn label-success btn-flat margin">确 定</button>
+											<button id="shelveBtn"
+												th:onclick="'javascript:editShelveGoodsItem();'"
+												class="btn bg-maroon btn-flat margin">上架出售</button>
+										</div>
+
+									</div>
+
+								</div>
+							</div>
+							<div class="box-footer">
+								<small>修改商品信息</small>
+							</div>
+						</div>
+
+						<!-- 内容结束 -->
+					</div>
+				</div>
+			</section>
+
+		</div>
+
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 2.4.0
+			</div>
+			<strong>Copyright &copy; 2014-2016 <a
+				th:href="@{https://adminlte.io}">Almsaeed Studio</a>.
+			</strong> All rights reserved.
+		</footer>
+	</div>
+
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script
+		th:src="@{/bower_components/select2/dist/js/select2.full.min.js}"></script>
+	<script th:src="@{/bower_components/moment/min/moment.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-daterangepicker/daterangepicker.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js}"></script>
+	<script
+		th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+	<script th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+	<script th:src="@{/bower_components/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.js}"></script>
+	<script
+		th:src="@{/plugins/input-mask/jquery.inputmask.date.extensions.js}"></script>
+	<script th:src="@{/plugins/input-mask/jquery.inputmask.extensions.js}"></script>
+	<script th:src="@{/plugins/timepicker/bootstrap-timepicker.min.js}"></script>
+	<script
+		th:src="@{/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js}"></script>
+	<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script th:src="@{/dist/js/demo.js}"></script>
+	<script>
+		$(function() {
+
+			//bootstrap WYSIHTML5 - text editor
+			CKEDITOR.replace('editor1')
+
+			//Initialize Select2 Elements
+			$('.select2').select2()
+
+		})
+	</script>
+
+	<script type="text/javascript">
+	
+	//页面初始化时加载	
+	$(function() {
+		openwindow("operateResultWindow");
+	});
+
+	// 打开模态框的通用方法
+	var openwindow = function(windowObj) {
+		$("#" + windowObj).modal("show");
+	}
+
+	//关闭模态框的通用方法
+	var closewindow = function(windowObj) {
+		$("#" + windowObj).modal("hide");
+	}
+
+	//通知消息窗口
+	var openJSNoticeWindow = function(content) {
+		$("#notice_content").text(content);
+		$("#jsNoticeWindow").modal("show");
+	}
+	
+		//略缩图开始
+		var allowExt = [ 'jpg', 'gif', 'bmp', 'png', 'jpeg' ];
+		var imgname;
+		var imgs;
+		var preivew = function(file, container) {
+			imgname = file.value;
+			imgs = imgname.split(".");
+			if (imgs.length == 0) {
+				openJSNoticeWindow("所选文件不是图片格式文件！");
+				var file = $("#file")
+				file.after(file.clone().val(""));
+				file.remove();
+				document.getElementById(container).alt = "未选择图片";
+				document.getElementById(container).src = "";
+				return;
+			}
+			imgname = imgs[imgs.length - 1];
+			if (!(imgname == "png" || imgname == "jpg" || imgname == "jpeg"
+					|| imgname == "bmp" || imgname == "gif")) {
+				openJSNoticeWindow("所选文件不是图片格式文件！");
+				var file = $("#goodsItemImgInput")
+				file.after(file.clone().val(""));
+				file.remove();
+				document.getElementById(container).alt = "未选择图片";
+				document.getElementById(container).src = "";
+				return;
+			}
+			try {
+				var pic = new Picture(file, document.getElementById(container));
+			} catch (e) {
+				alert(e);
+			}
+		}
+		//缩略图类定义 
+		var Picture = function(file, container) {
+			var height = 0, widht = 0, ext = '', size = 0, name = '', path = '';
+			var self = this;
+			if (file) {
+				path = getImgUrl(file.id);
+				name = file.value;
+				if (window.navigator.userAgent.indexOf("MSIE") >= 1) {
+					file.select();
+					path = document.selection.createRange().text;
+				} else if (window.navigator.userAgent.indexOf("Firefox") >= 1) {
+					if (file.files) {
+						path = file.files.item(0).getAsDataURL();
+					} else {
+						path = file.value;
+					}
+				}
+			} else {
+				throw '无效的文件';
+			}
+			ext = name.substr(name.lastIndexOf("."), name.length);
+			if (container.tagName.toLowerCase() != 'img') {
+				throw '不是一个有效的图片容器';
+				container.visibility = 'hidden';
+			}
+			container.src = path;
+			container.alt = name;
+			container.style.visibility = 'visible';
+			size = container.fileSize;
+			this.get = function(name) {
+				return self[name];
+			}
+			this.isValid = function() {
+				if (allowExt.indexOf(self.ext) !== -1) {
+					throw '不允许上传该文件类型';
+					return false;
+				}
+			}
+		}
+
+		var getImgUrl = function(sourceId) {
+			var url;
+			if (navigator.userAgent.indexOf("MSIE") >= 1) { // IE 
+				url = document.getElementById(sourceId).value;
+			} else if (navigator.userAgent.indexOf("Firefox") > 0) { // Firefox 
+				url = window.URL.createObjectURL(document
+						.getElementById(sourceId).files.item(0));
+			} else if (navigator.userAgent.indexOf("Chrome") > 0) { // Chrome 
+				url = window.URL.createObjectURL(document
+						.getElementById(sourceId).files.item(0));
+			}
+			return url;
+		}
+
+		//略缩图结束
+
+		var clearImg = function(imgInput, imgTag) {
+			var imtDom = document.getElementById(imgInput);
+			if (imtDom.value == '' || imtDom.value == null) {
+				return;
+			}
+			var file = $("#" + imgInput);
+			file.after(file.clone().val(""));
+			file.remove();
+			document.getElementById(imgTag).alt = "";
+			document.getElementById(imgTag).src = "";
+		}
+
+		// 修改商品
+		var editGoodsItem = function() {
+			if(!checkParam()){
+				return;
+			}
+			var classItemId = $("#goodsClassItemId").val();
+			var oldGoodsClassItemId = $("#oldGoodsClassItemId").val();
+
+			var oldGoodsItemPrice = $("#oldGoodsItemPrice").val();
+			var newGoodsItemPrice = $("#goodsItemPrice").val();
+			
+			$("#isShelveInput").val(0);
+			
+			if((classItemId != oldGoodsClassItemId)||(oldGoodsItemPrice != newGoodsItemPrice)){
+				$("#suretag").html("已修改商品价格或者类别，将发布新商品，确认修改？");
+			}else{
+				$("#suretag").html("确认修改？");
+			}
+			openwindow('editwindow');
+		}
+
+		// 修改商品并上架
+		var editShelveGoodsItem = function() {
+			if(!checkParam()){
+				return;
+			}
+			$("#isShelveInput").val(1);
+			var classItemId = $("#goodsClassItemId").val();
+			var oldGoodsClassItemId = $("#oldGoodsClassItemId").val();
+
+			var oldGoodsItemPrice = $("#oldGoodsItemPrice").val();
+			var newGoodsItemPrice = $("#goodsItemPrice").val();
+			
+			if(classItemId != oldGoodsClassItemId||oldGoodsItemPrice != newGoodsItemPrice){
+				$("#suretag").html("已修改商品价格或者类别，将发布新商品，确认发布新商品？");
+			}else{
+				$("#suretag").html("确认修改并上架出售？");
+			}
+			openwindow('editwindow');
+		}
+		
+		//确认修改
+		var editConfrimGoodsItem = function(){
+			$("#editForm").submit();
+		}
+
+		// 检查商品类别名是否存在
+		var checkItemNameExist = function(objName) {
+			var itemName = $("#" + objName).val();
+			if (itemName == null || itemName == '') {
+				return;
+			}
+			$.ajax({
+				url : '/goods/checkGoodsItemNameExist',
+				type : 'post',
+				async : true,
+				dataType : 'json',
+				data : {
+					goodsItemName : itemName
+				},
+				success : function(data) {
+					if (data == 0) {
+						openJSNoticeWindow("商品名 ：" + itemName + " 可用 。");
+						return false;
+					} else {
+						openJSNoticeWindow("商品名 ：" + itemName + " 已存在 。");
+						return true;
+					}
+				}
+			});
+		}
+		
+		var checkParam = function() {
+
+			var goodsItemName = $("#goodsItemName").val();
+			if (goodsItemName == null || goodsItemName == '') {
+				openJSNoticeWindow("请输入商品名称。");
+				return false;
+			}
+
+			var goodsItemPrice = $("#goodsItemPrice").val();
+			if (goodsItemPrice == null || goodsItemPrice == '') {
+				openJSNoticeWindow("请输入商品价格。");
+				return false;
+			}
+
+			if (!(/^\d+(\.\d{1,2})?$/.test(goodsItemPrice))) {
+				openJSNoticeWindow("商品价格保留两位小数。");
+				return false;
+			}
+			
+			if(goodsItemPrice /*<![CDATA[*/</* ]]> */ 0){
+				openJSNoticeWindow("商品库存输入不正确。");
+				return false;
+			}
+
+			var goodsItemPoint = $("#goodsItemPoint").val();
+			if (goodsItemPoint == null || goodsItemPoint == '') {
+				openJSNoticeWindow("请输入商品积分。");
+				return false;
+			}
+
+			if (!(/^[0-9]*$/.test(goodsItemPoint))) {
+				openJSNoticeWindow("商品积分输入不正确。");
+				return false;
+			}
+			
+			if(goodsItemPoint  /*<![CDATA[*/</* ]]> */ 0){
+				openJSNoticeWindow("商品积分输入不正确。");
+				return false;
+			}
+			
+			var goodsItemObtainPoint = $("#goodsItemObtainPoint").val();
+			if (goodsItemObtainPoint == null || goodsItemObtainPoint == '') {
+				openJSNoticeWindow("请输入购买商品获得积分。");
+				return false;
+			}
+
+			if (!(/^[0-9]*$/.test(goodsItemObtainPoint))) {
+				openJSNoticeWindow("购买商品获得积分输入不正确。");
+				return false;
+			}
+			
+			if(goodsItemObtainPoint  /*<![CDATA[*/</* ]]> */ 0){
+				openJSNoticeWindow("购买商品获得积分输入不正确。");
+				return false;
+			}
+			
+			var goodsItemNumber = $("#goodsItemNumber").val();
+			if (goodsItemNumber == null || goodsItemNumber == '') {
+				openJSNoticeWindow("请输入商品库存。");
+				return false;
+			}
+
+			if (!(/^[0-9]*$/.test(goodsItemNumber))) {
+				openJSNoticeWindow("商品库存输入不正确。");
+				return false;
+			}
+			
+			if(goodsItemNumber  /*<![CDATA[*/</* ]]> */ 1){
+				openJSNoticeWindow("商品库存输入不正确。");
+				return false;
+			}
+			
+			var goodsItemSpecification = $("#goodsItemSpecification").val();
+			if (goodsItemSpecification == null || goodsItemSpecification == '') {
+				openJSNoticeWindow("请输入商品规格。");
+				return false;
+			}
+			return true;
+		}
+		
+	</script>
+
+</body>
+</html>

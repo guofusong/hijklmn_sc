@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<title>mgr</title>
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}" />
+<link rel="stylesheet"
+	th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}" />
+<link rel="stylesheet" th:href="@{/dist/css/skins/_all-skins.min.css}" />
+<style>
+.color-palette {
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+}
+
+.color-palette-set {
+	margin-bottom: 15px;
+}
+
+.color-palette span {
+	display: none;
+	font-size: 12px;
+}
+
+.color-palette:hover span {
+	display: block;
+}
+
+.color-palette-box h4 {
+	position: absolute;
+	top: 100%;
+	left: 25px;
+	margin-top: -40px;
+	color: rgba(255, 255, 255, 0.8);
+	font-size: 12px;
+	display: block;
+	z-index: 7;
+}
+
+.operate-option {
+	cursor: pointer;
+}
+</style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<div class="wrapper">
+		<header class="main-header">
+			<a th:href="@{/home}" class="logo"> <span class="logo-mini"><b>A</b>dmin</span>
+				<span class="logo-lg"><b>Admin</b></span>
+			</a>
+			<nav class="navbar navbar-static-top">
+				<a class="sidebar-toggle" data-toggle="push-menu" role="button">
+					<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu"><a
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								th:src="@{/dist/img/user2-160x160.jpg}" class="user-image"
+								alt="User Image" /> <span class="hidden-xs"
+								th:text="${session.user.username}"></span>
+						</a>
+							<ul class="dropdown-menu">
+								<li class="user-header"><img
+									th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+									alt="User Image" />
+									<p th:text="${session.user.username}"></p>
+									<p>
+										<small><span>最近登录时间：</span><span
+											th:text="${#dates.format(session.user.lastLoginDatetime,'yyyy-MM-dd HH:mm:ss')}"></span></small>
+									</p></li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a th:href="@{/logout}" class="btn btn-default btn-flat">Log
+											out</a>
+									</div>
+								</li>
+							</ul></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<div class="pull-left image">
+						<img th:src="@{/dist/img/user2-160x160.jpg}" class="img-circle"
+							alt="User Image" />
+					</div>
+					<div class="pull-left info">
+						<p>
+							<span th:text="${session.user.username}"></span>
+						</p>
+						<a><i class="fa fa-circle text-success"></i> Online</a>
+					</div>
+				</div>
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">MAIN NAVIGATION</li>
+					<tr th:each="prod : ${prods}">
+						<td th:text="${prod.name}">Onions</td>
+						<td th:text="${prod.price}">2.41</td>
+						<td th:text="${prod.inStock}? #{true} : #{false}">yes</td>
+					</tr>
+					<li th:each="optionCard : ${session.optionCards}"><a
+						th:href="${optionCard.requestUrl}"><i
+							class="fa fa-circle-o text-aqua"></i><span
+							th:text="${optionCard.optionName}"></span></a></li>
+				</ul>
+			</section>
+		</aside>
+		<div class="content-wrapper">
+			<section class="content-header">
+				<h1>
+					Admin <small>mgr</small>
+				</h1>
+			</section>
+
+			<!-- 控制台 -->
+			<section class="content">
+				<div class="box box-default color-palette-box">
+					<div class="box-header with-border">
+						<h3 class="box-title">
+							<i class="fa fa-tag"></i> <small>系统操作</small>
+						</h3>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-sm-4 col-md-2">
+								<h4 class="text-center operate-option"
+									th:onclick="'javascript:reflushGoodsItem(\'reflushForm\');'">刷新商品信息（Redis）</h4>
+								<form id="reflushForm" action="/goods/reflushGoodsItem"
+									method="post"></form>
+								<div class="color-palette-set">
+									<div class="bg-light-blue-active color-palette operate-option"
+										th:onclick="'javascript:reflushGoodsItem(\'reflushForm\');'"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="box box-default">
+					<div class="box-header with-border">
+						<i class="fa fa-bullhorn"></i>
+
+						<h3 class="box-title">
+							<small>操作通知</small>
+						</h3>
+					</div>
+					<div class="box-body">
+						<div class="callout callout-success"
+							th:if="${operateResultTitle!=null}">
+							<h4 th:text="${operateResultTitle}"></h4>
+							<p th:text="${operateResultBody}"></p>
+						</div>
+					</div>
+				</div>
+
+			</section>
+
+		</div>
+		<footer class="main-footer">
+			<div class="pull-right hidden-xs">
+				<b>Version</b> 2.4.0
+			</div>
+			<strong>Copyright &copy; 2014-2016 <a
+				th:href="@{https://adminlte.io}">Almsaeed Studio</a>.
+			</strong> All rights reserved.
+		</footer>
+	</div>
+	<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+	<script
+		th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+	<script th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+	<script th:src="@{/dist/js/adminlte.min.js}"></script>
+	<script th:src="@{/dist/js/demo.js}"></script>
+	<script type="text/javascript">
+		var reflushGoodsItem = function(formObj) {
+			$("#" + formObj).submit();
+		}
+	</script>
+</body>
+</html>

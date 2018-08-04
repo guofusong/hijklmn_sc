@@ -1,0 +1,14 @@
+server.port=9090
+spring.application.name = hijklmnmediaserver
+eureka.instance.perfer-ip-address=true
+eureka.client.serviceUrl.defaultZone = http://192.168.1.200:1111/eureka/
+
+imageLocalPath = /home/guofusong/hijklmn/media/image/
+soundLocalPath = /home/guofusong/hijklmn/media/sound/
+videoLocalPath = /home/guofusong/hijklmn/media/video/
+#imageLocalPath = D:/hijklmn/image/
+#soundLocalPath = D:/hijklmn/sound/
+#videoLocalPath = D:/hijklmn/video/
+imageRequestPath = /media/image/
+soundRequestPath = /media/sound/
+videoRequestPath = /media/video/
