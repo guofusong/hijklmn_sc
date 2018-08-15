@@ -6,10 +6,10 @@ import org.apache.commons.lang.StringUtils;
 
 public class WebGetter {
 
-	public static String getString(String key, HttpServletRequest request, String defv) {
+	public static String getString(String key, HttpServletRequest request, String def) {
 		String val = request.getParameter(key);
 		if (StringUtils.isBlank(val)) {
-			return defv;
+			return def;
 		}
 		return val;
 	}
@@ -19,10 +19,10 @@ public class WebGetter {
 		return val;
 	}
 
-	public static Integer getInteger(String key, HttpServletRequest request, int defv) {
+	public static Integer getInteger(String key, HttpServletRequest request, int def) {
 		String val = request.getParameter(key);
 		if (StringUtils.isBlank(val)) {
-			return defv;
+			return def;
 		}
 		return Integer.parseInt(val);
 	}
